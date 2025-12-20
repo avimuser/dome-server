@@ -61,5 +61,13 @@ func FindPair(conn *redis.Client, ctx context.Context, client string) (string, e
 	if err != nil {
 		return "", fmt.Errorf("Get difference b/w waiting list and previous clients: %e", err)
 	}
+	fmt.Println(set)
+	if len(set) <= 0 {
+		randomPair, err := getRandomPair(conn, ctx)
+		if err != nil {
+			return "", fmt.Errorf("Check previous matches list empty: %e", err)
+		}
+		return randomPair, nil
+	}
 	return set[0], nil
 }

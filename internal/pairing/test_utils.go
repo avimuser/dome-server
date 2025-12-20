@@ -46,18 +46,20 @@ func runRedisTestCases(t *testing.T, cases []redisTestCase) {
 		wg.Go(func() {
 			conn, err := newRedisTestConn(t)
 			if err != nil {
-				t.Errorf("Error making a test container for %s: %e", testCase.name, err)
+				t.Errorf("Error making a test container for %s: %s", testCase.name, err)
+				return
 			}
 			defer conn.Close()
 
 			err = testCase.setupDatabase(conn)
 			if err != nil {
-				t.Errorf("Error setting up database for %s: %e", testCase.name, err)
+				t.Errorf("Error setting up database for %s: %s", testCase.name, err)
+				return
 			}
 
 			err = testCase.check(conn)
 			if err != nil {
-				t.Errorf("Error setting up database for %s: %e", testCase.name, err)
+				t.Errorf("%s: %s", testCase.name, err)
 			}
 		})
 	}
